@@ -2,15 +2,39 @@ using UnityEngine;
 
 public class InputReader : MonoBehaviour
 {
-    private const string c_horizotal = "Horizontal";
-    private const string c_vertical = "Vertical";
+    [SerializeField] private Swing _swing;
+    [SerializeField] private Spoon _spoon;
 
-    public float HorizontalShift { get; private set; }
-    public float VerticalShift { get; private set; }
+    private float _velocityForStart = 100f;
+    private float _velocityForFinish = 0f;
+    private KeyCode _startSwingButton = KeyCode.A;
+    private KeyCode _attackProjectile = KeyCode.Space;
+    private KeyCode _rechargeSpoon = KeyCode.R;
+    private bool _isSwing = false;
 
     private void Update()
     {
-        HorizontalShift = Input.GetAxis(c_horizotal);
-        VerticalShift = Input.GetAxis(c_vertical);
+        if (Input.GetKeyUp(KeyCode.A))
+        {
+            if (_isSwing == false)
+            {
+                _swing.SetMotorProperty(_velocityForStart);
+                _isSwing = true;
+            }
+            else
+            {
+                _swing.SetMotorProperty(_velocityForFinish);
+                _isSwing = false;
+            }
+        }
+
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            _spoon.Shot();
+        }
+        else if (Input.GetKeyUp(KeyCode.R))
+        {
+            _spoon.Recharge();
+        }
     }
 }
